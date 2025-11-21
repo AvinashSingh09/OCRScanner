@@ -81,7 +81,7 @@ function App() {
 
           {/* Progress Indicator */}
           <div className="mt-6 flex items-center justify-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${currentStep === 1 ? 'bg-purple-600 shadow-lg shadow-purple-500/50 scale-110' : image1 ? 'bg-green-600' : 'bg-gray-700'
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${currentStep === 1 ? 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200' : image1 ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-white/10 border-white/20 text-gray-400'
               }`}>
               {image1 ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@ function App() {
 
             <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full" />
 
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${currentStep === 2 ? 'bg-purple-600 shadow-lg shadow-purple-500/50 scale-110' : image2 ? 'bg-green-600' : 'bg-gray-700'
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${currentStep === 2 ? 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200' : image2 ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-white/10 border-white/20 text-gray-400'
               }`}>
               {image2 ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +164,7 @@ function App() {
             <button
               onClick={handleResetAll}
               disabled={isProcessing}
-              className={`group px-8 py-4 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`group px-8 py-4 backdrop-blur-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -175,7 +175,7 @@ function App() {
             <button
               onClick={handleProcessImages}
               disabled={isProcessing}
-              className={`px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'animate-pulse cursor-wait' : ''}`}
+              className={`px-8 py-4 backdrop-blur-xl bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-300 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'animate-pulse cursor-wait' : ''}`}
             >
               {isProcessing ? (
                 <>
