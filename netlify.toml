@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Disable secrets scanning for client-side environment variables
+  SECRETS_SCAN_ENABLED = "false"
