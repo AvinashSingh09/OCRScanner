@@ -14,7 +14,7 @@ const genAI = API_KEY && API_KEY !== 'your_gemini_api_key_here'
 /**
  * Extract text from an image using Gemini Vision API
  * @param {string} imageDataUrl - Base64 encoded image data URL
- * @returns {Promise<string>} Extracted text from the image
+ * @returns {Promise<string>} Extracted text from the image (JSON string)
  */
 export async function extractTextFromImage(imageDataUrl) {
   if (!genAI) {
@@ -26,7 +26,6 @@ export async function extractTextFromImage(imageDataUrl) {
 
   try {
     // List of models to try in order of preference
-    // Updated based on available models for this API key
     const modelsToTry = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-flash-latest'];
 
     let lastError = null;
@@ -42,7 +41,17 @@ export async function extractTextFromImage(imageDataUrl) {
       },
     };
 
-    const prompt = `Extract all text from this image. Please provide the text exactly as it appears in the image, maintaining the formatting and structure as much as possible. If there is no text in the image, respond with "No text found in this image."`;
+    const prompt = `Extract business card details from this image. Return ONLY a valid JSON object with the following fields:
+    - name (string): Full name of the person
+    - jobTitle (string): Job title or position
+    - company (string): Company name
+    - email (string): Email address
+    - phone (string): Phone number
+    - website (string): Website URL
+    - address (string): Physical address
+    - fullText (string): All text found on the card
+    
+    If a field is not found, use an empty string. Do not include markdown formatting (like \`\`\`json) in the response.`;
 
     // Try each model until one works
     for (const modelName of modelsToTry) {
@@ -52,9 +61,29 @@ export async function extractTextFromImage(imageDataUrl) {
 
         const result = await model.generateContent([prompt, imagePart]);
         const response = await result.response;
-        const text = response.text();
+        let text = response.text();
 
-        return text; // Success! Return immediately
+        // Clean up markdown if present
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        // Validate JSON
+        try {
+          JSON.parse(text);
+          return text; // Return the JSON string
+        } catch (e) {
+          console.warn('Failed to parse JSON from model response, returning raw text wrapped in JSON structure');
+          // Fallback: wrap raw text in a basic structure if JSON parsing fails
+          return JSON.stringify({
+            name: '',
+            jobTitle: '',
+            company: '',
+            email: '',
+            phone: '',
+            website: '',
+            address: '',
+            fullText: text
+          });
+        }
       } catch (error) {
         console.warn(`Failed with model ${modelName}:`, error.message);
         lastError = error;
