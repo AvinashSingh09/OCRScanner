@@ -1,3 +1,6 @@
+/* global LockService, SpreadsheetApp, ContentService */
+/* eslint-disable no-unused-vars */
+
 // 1. Open your Google Sheet
 // 2. Go to Extensions > Apps Script
 // 3. Delete any code there and paste this code
@@ -23,30 +26,16 @@ function doPost(e) {
         if (sheet.getLastRow() === 0) {
             sheet.appendRow([
                 'Timestamp',
-                'Name',
-                'Job Title',
-                'Company',
-                'Email',
-                'Phone',
-                'Website',
-                'Address',
-                'Image 1 URL',
-                'Image 2 URL'
+                'Full Text',
+                'Image URL'
             ]);
         }
 
         // Append the new row
         sheet.appendRow([
             new Date(),
-            data.name || '',
-            data.jobTitle || '',
-            data.company || '',
-            data.email || '',
-            data.phone || '',
-            data.website || '',
-            data.address || '',
-            data.imageUrl1 || '',
-            data.imageUrl2 || ''
+            data.fullText || '',
+            data.imageUrl || ''
         ]);
 
         return ContentService.createTextOutput(JSON.stringify({ 'result': 'success' }))
@@ -64,14 +53,7 @@ function setup() {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     sheet.appendRow([
         'Timestamp',
-        'Name',
-        'Job Title',
-        'Company',
-        'Email',
-        'Phone',
-        'Website',
-        'Address',
-        'Image 1 URL',
-        'Image 2 URL'
+        'Full Text',
+        'Image URL'
     ]);
 }

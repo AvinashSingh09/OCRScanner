@@ -1,37 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageCapture from './components/ImageCapture';
-import { extractTextFromImages } from './services/geminiService';
+import { extractTextFromImage } from './services/geminiService';
 import './App.css';
 
 function App() {
   const navigate = useNavigate();
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [image, setImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCaptureImage1 = (imageData) => {
-    setImage1(imageData);
-    setCurrentStep(2);
+  const handleCaptureImage = (imageData) => {
+    setImage(imageData);
   };
 
-  const handleCaptureImage2 = (imageData) => {
-    setImage2(imageData);
-  };
-
-  const handleProcessImages = async () => {
-    if (!image1 || !image2) return;
+  const handleProcessImage = async () => {
+    if (!image) return;
 
     setIsProcessing(true);
     try {
-      const [text1, text2] = await extractTextFromImages([image1, image2]);
+      const fullText = await extractTextFromImage(image);
       navigate('/results', {
         state: {
-          image1,
-          image2,
-          text1,
-          text2
+          image,
+          fullText
         }
       });
     } catch (error) {
@@ -47,25 +38,13 @@ function App() {
     navigate('/login');
   };
 
-  const handleRetakeImage1 = () => {
-    setImage1(null);
-    if (!image2) {
-      setCurrentStep(1);
-    }
-  };
-
-  const handleRetakeImage2 = () => {
-    setImage2(null);
-    setCurrentStep(2);
+  const handleRetakeImage = () => {
+    setImage(null);
   };
 
   const handleResetAll = () => {
-    setImage1(null);
-    setImage2(null);
-    setCurrentStep(1);
+    setImage(null);
   };
-
-  const bothImagesCaptured = image1 && image2;
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -76,90 +55,45 @@ function App() {
             Image Capture Studio
           </h1>
           <p className="text-purple-300 text-lg sm:text-xl">
-            Capture two high-quality images with ease
+            Capture one high-quality image and save all extracted text
           </p>
 
           {/* Progress Indicator */}
           <div className="mt-6 flex items-center justify-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${currentStep === 1 ? 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200' : image1 ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-white/10 border-white/20 text-gray-400'
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${image ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200'
               }`}>
-              {image1 ? (
+              {image ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               ) : (
                 <span className="w-5 h-5 flex items-center justify-center font-bold">1</span>
               )}
-              <span className="font-semibold">Image 1</span>
-            </div>
-
-            <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full" />
-
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${currentStep === 2 ? 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200' : image2 ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-white/10 border-white/20 text-gray-400'
-              }`}>
-              {image2 ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              ) : (
-                <span className="w-5 h-5 flex items-center justify-center font-bold">2</span>
-              )}
-              <span className="font-semibold">Image 2</span>
+              <span className="font-semibold">Image</span>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Image 1 Capture */}
+        <div className="max-w-3xl mx-auto">
           <div className="relative">
             <div className="absolute -top-3 left-4 z-10">
               <span className="px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full text-sm font-bold shadow-lg">
-                Image 1
+                Image
               </span>
             </div>
             <div className="p-6 rounded-3xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
               <ImageCapture
-                imageNumber={1}
-                onCapture={handleCaptureImage1}
-                capturedImage={image1}
-                onRetake={handleRetakeImage1}
+                onCapture={handleCaptureImage}
+                capturedImage={image}
+                onRetake={handleRetakeImage}
               />
-            </div>
-          </div>
-
-          {/* Image 2 Capture */}
-          <div className="relative">
-            <div className="absolute -top-3 left-4 z-10">
-              <span className="px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full text-sm font-bold shadow-lg">
-                Image 2
-              </span>
-            </div>
-            <div className={`p-6 rounded-3xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl transition-all duration-500 ${!image1 ? 'opacity-50 pointer-events-none scale-95' : 'opacity-100 scale-100'
-              }`}>
-              {!image1 ? (
-                <div className="aspect-video flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-purple-500/30 rounded-2xl">
-                  <svg className="w-20 h-20 text-purple-400/50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  <p className="text-purple-400/70 text-lg font-semibold">
-                    Capture Image 1 first
-                  </p>
-                </div>
-              ) : (
-                <ImageCapture
-                  imageNumber={2}
-                  onCapture={handleCaptureImage2}
-                  capturedImage={image2}
-                  onRetake={handleRetakeImage2}
-                />
-              )}
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        {bothImagesCaptured && (
+        {image && (
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in">
             <button
               onClick={handleResetAll}
@@ -173,7 +107,7 @@ function App() {
             </button>
 
             <button
-              onClick={handleProcessImages}
+              onClick={handleProcessImage}
               disabled={isProcessing}
               className={`px-8 py-4 backdrop-blur-xl bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-300 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'animate-pulse cursor-wait' : ''}`}
             >
@@ -190,7 +124,7 @@ function App() {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                   </svg>
-                  Process Images
+                  Process Image
                 </>
               )}
             </button>

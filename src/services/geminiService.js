@@ -14,7 +14,7 @@ const genAI = API_KEY && API_KEY !== 'your_gemini_api_key_here'
 /**
  * Extract text from an image using Gemini Vision API
  * @param {string} imageDataUrl - Base64 encoded image data URL
- * @returns {Promise<string>} Extracted text from the image (JSON string)
+ * @returns {Promise<string>} Extracted text from the image
  */
 export async function extractTextFromImage(imageDataUrl) {
   if (!genAI) {
@@ -41,17 +41,10 @@ export async function extractTextFromImage(imageDataUrl) {
       },
     };
 
-    const prompt = `Extract business card details from this image. Return ONLY a valid JSON object with the following fields:
-    - name (string): Full name of the person
-    - jobTitle (string): Job title or position
-    - company (string): Company name
-    - email (string): Email address
-    - phone (string): Phone number
-    - website (string): Website URL
-    - address (string): Physical address
-    - fullText (string): All text found on the card
-    
-    If a field is not found, use an empty string. Do not include markdown formatting (like \`\`\`json) in the response.`;
+    const prompt = `Extract all visible text from this image.
+Return only the extracted text, preserving line breaks as much as possible.
+Do not summarize, classify, reformat into JSON, or look for specific fields.
+If no text is visible, return an empty response.`;
 
     // Try each model until one works
     for (const modelName of modelsToTry) {
@@ -63,27 +56,7 @@ export async function extractTextFromImage(imageDataUrl) {
         const response = await result.response;
         let text = response.text();
 
-        // Clean up markdown if present
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
-        // Validate JSON
-        try {
-          JSON.parse(text);
-          return text; // Return the JSON string
-        } catch (e) {
-          console.warn('Failed to parse JSON from model response, returning raw text wrapped in JSON structure');
-          // Fallback: wrap raw text in a basic structure if JSON parsing fails
-          return JSON.stringify({
-            name: '',
-            jobTitle: '',
-            company: '',
-            email: '',
-            phone: '',
-            website: '',
-            address: '',
-            fullText: text
-          });
-        }
+        return text.replace(/```(?:text)?/g, '').replace(/```/g, '').trim();
       } catch (error) {
         console.warn(`Failed with model ${modelName}:`, error.message);
         lastError = error;
