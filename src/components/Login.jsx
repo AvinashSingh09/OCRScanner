@@ -17,61 +17,83 @@ const Login = () => {
             localStorage.setItem('isAuthenticated', 'true');
             navigate('/');
         } else {
-            setError('Invalid username or password');
+            setError('Invalid credentials. Access Denied.');
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            <div className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl bg-white/10 border border-white/10 shadow-2xl">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
-                    <p className="text-purple-200/70">Please sign in to continue</p>
+        <div className="min-h-screen flex items-center justify-center p-6 bg-[#FAF8F5] font-sans text-[#1C1917]">
+            <div className="w-full max-w-md bg-white border border-[#1C1917] p-8 md:p-10 shadow-[6px_6px_0px_0px_rgba(28,25,23,0.1)] relative">
+                {/* Minimal Top Corner Details */}
+                <div className="absolute top-3 left-3 text-[10px] font-mono tracking-widest text-stone-400">
+                    OCR SCANNER
+                </div>
+                <div className="absolute top-3 right-3 text-[10px] font-mono tracking-widest text-stone-400">
+                    LOGIN
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-6">
+                <div className="text-center mt-4 mb-8">
+                    <h1 className="text-4xl font-serif font-light text-[#1C1917] tracking-tight mb-2">
+                        Admin Login
+                    </h1>
+                    <div className="w-12 h-[1px] bg-[#1C1917] mx-auto my-3" />
+                    <p className="text-xs font-mono tracking-widest text-stone-500 uppercase">
+                        Please sign in to continue
+                    </p>
+                </div>
+
+                <form onSubmit={handleLogin} className="space-y-5">
                     <div>
-                        <label className="block text-sm font-medium text-purple-200 mb-2">
+                        <label className="block text-[11px] font-mono tracking-widest text-stone-600 uppercase mb-2">
                             Username
                         </label>
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl bg-black/20 border border-purple-500/30 text-white placeholder-purple-300/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 bg-[#FAF8F5] border border-stone-300 rounded-none text-[#1C1917] placeholder-stone-400/60 focus:outline-none focus:border-[#1C1917] font-sans text-sm transition-colors"
                             placeholder="Enter username"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-purple-200 mb-2">
+                        <label className="block text-[11px] font-mono tracking-widest text-stone-600 uppercase mb-2">
                             Password
                         </label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl bg-black/20 border border-purple-500/30 text-white placeholder-purple-300/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 bg-[#FAF8F5] border border-stone-300 rounded-none text-[#1C1917] placeholder-stone-400/60 focus:outline-none focus:border-[#1C1917] font-sans text-sm transition-colors"
                             placeholder="Enter password"
                         />
                     </div>
 
                     {error && (
-                        <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/50 text-red-200 text-sm text-center">
-                            {error}
+                        <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-mono text-center">
+                            ✕ {error}
                         </div>
                     )}
 
                     <button
                         type="submit"
-                        className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-purple-500/50 hover:scale-[1.02] transition-all duration-300"
+                        className="w-full py-3.5 px-4 bg-[#1C1917] hover:bg-stone-800 text-[#FAF8F5] font-sans font-medium uppercase tracking-widest text-xs transition-colors shadow-sm duration-200 cursor-pointer flex items-center justify-center gap-2"
                     >
                         Sign In
+                        <span className="text-sm font-light">→</span>
                     </button>
                 </form>
+
+                {/* Aesthetic Footer Detail */}
+                <div className="mt-8 pt-4 border-t border-stone-200 text-center">
+                    <p className="text-[10px] font-mono tracking-widest text-stone-400 uppercase">
+                        OCR Scanner Studio
+                    </p>
+                </div>
             </div>
         </div>
     );
 };
 
 export default Login;
+

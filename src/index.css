@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
-body {
-  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
-  min-height: 100vh;
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "DM Mono", monospace;
 }
+
+body {
+  background-color: #FAF8F5;
+  color: #1C1917;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+}

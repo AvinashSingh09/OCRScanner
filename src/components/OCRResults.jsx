@@ -76,6 +76,7 @@ const OCRResults = () => {
         setExtractedText(value);
     };
 
+
     const handleStartOver = () => {
         navigate('/');
     };
@@ -83,82 +84,90 @@ const OCRResults = () => {
     if (!image) return null;
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-7xl">
-                {/* Header */}
-                <div className="text-center mb-8 sm:mb-12">
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent">
-                        OCR Results
-                    </h1>
-                    <p className="text-green-300 text-lg sm:text-xl">
-                        Review all text extracted from the image
-                    </p>
-                </div>
+        <div className="min-h-screen bg-[#FAF8F5] text-[#1C1917] font-sans pb-16 relative">
+            {/* Top Border Line */}
+            <div className="w-full h-[1px] bg-stone-300" />
 
-                {/* Combined Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
-                    {/* Image Preview */}
-                    <div className="lg:col-span-2">
-                        <div className="relative">
-                            <div className="absolute -top-3 left-4 z-10">
-                                <span className="px-3 py-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-full text-xs font-bold shadow-lg">
-                                    Image
-                                </span>
+            <div className="w-full max-w-7xl mx-auto px-6 py-10 sm:py-16">
+                {/* Combined Grid Spread */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-10">
+                    
+                    {/* Left Column: Image Gallery Frame (lg:col-span-7) */}
+                    <div className="lg:col-span-7 space-y-4">
+                        <div className="bg-white border border-[#1C1917] p-4 shadow-sm relative">
+                            {/* Accent badge */}
+                            <div className="absolute top-0 left-6 -translate-y-1/2 bg-[#1C1917] text-[#FAF8F5] px-3 py-0.5 text-[9px] font-mono tracking-widest uppercase">
+                                Image
                             </div>
-                            <div className="p-4 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
-                                <div className="rounded-xl overflow-hidden border-2 border-green-500/30">
-                                    <img src={image} alt="Captured document" className="w-full h-auto object-cover" />
-                                </div>
+                            
+                            <div className="border border-stone-100 overflow-hidden bg-stone-50">
+                                <img 
+                                    src={image} 
+                                    alt="Captured document source" 
+                                    className="w-full h-auto object-contain mx-auto max-h-[65vh]" 
+                                />
+                            </div>
+                        </div>
+
+                        {/* Image Metadata Ledger */}
+                        <div className="border border-stone-200 bg-white p-4 font-mono text-[11px] text-stone-600 space-y-2">
+                            <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                                <span>METADATA FIELD</span>
+                                <span className="text-[#1C1917] font-semibold">RECORD VALUE</span>
+                            </div>
+                            <div className="flex justify-between border-b border-stone-100 py-1">
+                                <span className="text-stone-400">SOURCE</span>
+                                <span className="text-stone-700">IMAGE</span>
+                            </div>
+                            <div className="flex justify-between border-b border-stone-100 py-1">
+                                <span className="text-stone-400">CAPTURED AT</span>
+                                <span className="text-stone-700">{new Date().toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Extracted Text */}
-                    <div className="lg:col-span-1">
-                        <div className="relative">
-                            <div className="absolute -top-3 left-4 z-10">
-                                <span className="px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full text-sm font-bold shadow-lg">
-                                    Extracted Text
-                                </span>
+                    {/* Right Column: Ledger Textarea (lg:col-span-5) */}
+                    <div className="lg:col-span-5">
+                        <div className="bg-white border border-[#1C1917] p-6 shadow-sm relative h-full flex flex-col justify-between">
+                            {/* Accent badge */}
+                            <div className="absolute top-0 left-6 -translate-y-1/2 bg-[#1C1917] text-[#FAF8F5] px-3 py-0.5 text-[9px] font-mono tracking-widest uppercase">
+                                Extracted Text
                             </div>
-                            <div className="p-6 rounded-3xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-green-300/70 mb-1 uppercase tracking-wider">
-                                            Full Text
-                                        </label>
-                                        <textarea
-                                            value={extractedText}
-                                            onChange={(e) => handleTextChange(e.target.value)}
-                                            className="w-full min-h-80 px-3 py-2 rounded-lg bg-black/20 border border-green-500/20 text-white placeholder-green-500/20 focus:outline-none focus:border-green-500/50 transition-all text-sm resize-y"
-                                            placeholder="Extracted text will appear here"
-                                        />
-                                    </div>
 
-                                    {/* Auto-save Status */}
-                                    {saveStatus && (
-                                        <div className={`w-full py-3 px-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${saveStatus === 'success'
-                                                ? 'bg-green-500/20 border border-green-500/50 text-green-300'
-                                                : 'bg-red-500/20 border border-red-500/50 text-red-300'
-                                            }`}>
-                                            {saveStatus === 'success' ? (
-                                                <>
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    Auto-Saved to Sheets!
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    Auto-save Failed
-                                                </>
-                                            )}
-                                        </div>
-                                    )}
+                            <div className="space-y-4 flex-grow flex flex-col">
+                                <div className="border-b border-stone-200 pb-2">
+                                    <h3 className="font-serif italic text-stone-700 text-base">
+                                        Full Text
+                                    </h3>
                                 </div>
+
+                                <div className="flex-grow relative flex flex-col">
+                                    <textarea
+                                        value={extractedText}
+                                        onChange={(e) => handleTextChange(e.target.value)}
+                                        className="w-full flex-grow min-h-[350px] lg:min-h-[420px] p-4 bg-[#FAF6F0] border border-stone-300 text-stone-800 font-mono text-xs focus:outline-none focus:border-[#1C1917] transition-all resize-none ruled-paper"
+                                        placeholder="Extracted text will appear here"
+                                    />
+                                </div>
+
+                                {/* Auto-save Status */}
+                                {saveStatus && (
+                                    <div className={`w-full py-2.5 px-4 font-mono text-[10px] tracking-wider uppercase text-center border transition-all duration-300 ${
+                                        saveStatus === 'success'
+                                            ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                                            : 'bg-red-50 border-red-200 text-red-800'
+                                    }`}>
+                                        {saveStatus === 'success' ? (
+                                            <span className="flex items-center justify-center gap-1.5">
+                                                ✓ Auto-Saved to Sheets!
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center justify-center gap-1.5">
+                                                ✕ Auto-save Failed
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -168,19 +177,11 @@ const OCRResults = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
                         onClick={handleStartOver}
-                        className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3"
+                        className="px-8 py-3.5 bg-[#1C1917] hover:bg-stone-800 text-[#FAF8F5] font-sans font-medium uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                        <span className="text-sm font-light">←</span>
                         Capture New Image
                     </button>
-                </div>
-
-                {/* Footer Info */}
-                <div className="mt-12 text-center text-green-400/60 text-sm">
-                    <p>✨ Powered by Google Gemini AI</p>
                 </div>
             </div>
         </div>

@@ -47,113 +47,114 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
-            Image Capture Studio
-          </h1>
-          <p className="text-purple-300 text-lg sm:text-xl">
-            Capture one high-quality image and save all extracted text
-          </p>
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1C1917] font-sans pb-16 relative">
+      {/* Top Thin Border Line */}
+      <div className="w-full h-[1px] bg-stone-300" />
 
-          {/* Progress Indicator */}
-          <div className="mt-6 flex items-center justify-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 backdrop-blur-xl border ${image ? 'bg-green-500/20 border-green-500/30 text-green-300' : 'bg-purple-500/30 border-purple-500/50 shadow-lg shadow-purple-500/50 scale-110 text-purple-200'
-              }`}>
-              {image ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              ) : (
-                <span className="w-5 h-5 flex items-center justify-center font-bold">1</span>
-              )}
-              <span className="font-semibold">Image</span>
+      <div className="w-full max-w-5xl mx-auto px-6 py-10 sm:py-16">
+        {/* Info Column & Section Detail */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+          <div className="md:col-span-4 space-y-6">
+            <div className="border-b border-stone-200 pb-4">
+              <h2 className="text-sm font-mono tracking-widest uppercase text-stone-600 mb-2">
+                Instructions
+              </h2>
+              <p className="text-sm text-stone-600 leading-relaxed font-serif">
+                Select or capture a clear, high-quality image. Gemini AI will analyze the picture and extract all text content automatically.
+              </p>
+            </div>
+
+            {/* Steps & Progress */}
+            <div className="space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-stone-200 py-2">
+                <span className="text-stone-400">1. CAPTURE IMAGE</span>
+                <span className={`px-2 py-0.5 text-[10px] font-medium tracking-wider uppercase ${image ? 'bg-stone-200 text-stone-800' : 'bg-[#1C1917] text-[#FAF8F5]'}`}>
+                  {image ? 'Completed' : 'Pending'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between border-b border-stone-200 py-2">
+                <span className="text-stone-400">2. EXTRACT TEXT</span>
+                <span className="text-stone-400">WAITING</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-stone-200 py-2">
+                <span className="text-stone-400">3. SAVE TO SHEETS</span>
+                <span className="text-stone-400">WAITING</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="max-w-3xl mx-auto">
-          <div className="relative">
-            <div className="absolute -top-3 left-4 z-10">
-              <span className="px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full text-sm font-bold shadow-lg">
+          {/* Main Ingest Area */}
+          <div className="md:col-span-8">
+            <div className="bg-white border border-[#1C1917] p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(28,25,23,0.06)] relative">
+              {/* Corner Accent Label */}
+              <div className="absolute top-0 left-6 -translate-y-1/2 bg-[#1C1917] text-[#FAF8F5] px-4 py-1 text-[10px] font-mono tracking-widest uppercase">
                 Image
-              </span>
+              </div>
+
+              <div className="mt-2">
+                <ImageCapture
+                  onCapture={handleCaptureImage}
+                  capturedImage={image}
+                  onRetake={handleRetakeImage}
+                />
+              </div>
             </div>
-            <div className="p-6 rounded-3xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
-              <ImageCapture
-                onCapture={handleCaptureImage}
-                capturedImage={image}
-                onRetake={handleRetakeImage}
-              />
-            </div>
+
+            {/* Action Buttons */}
+            {image && (
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-end items-stretch sm:items-center animate-fade-in">
+                <button
+                  onClick={handleResetAll}
+                  disabled={isProcessing}
+                  className={`px-6 py-3.5 bg-white hover:bg-stone-50 border border-stone-300 text-stone-700 font-mono tracking-widest uppercase text-xs transition-colors flex items-center justify-center gap-2 ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Reset All
+                </button>
+
+                <button
+                  onClick={handleProcessImage}
+                  disabled={isProcessing}
+                  className={`px-8 py-3.5 bg-[#1C1917] hover:bg-stone-800 text-[#FAF8F5] font-sans font-medium uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 ${isProcessing ? 'animate-pulse cursor-wait' : 'cursor-pointer shadow-sm'}`}
+                >
+                  {isProcessing ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Process Image
+                      <span className="text-sm font-light">→</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Action Buttons */}
-        {image && (
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in">
-            <button
-              onClick={handleResetAll}
-              disabled={isProcessing}
-              className={`group px-8 py-4 backdrop-blur-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Reset All
-            </button>
-
-            <button
-              onClick={handleProcessImage}
-              disabled={isProcessing}
-              className={`px-8 py-4 backdrop-blur-xl bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-300 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${isProcessing ? 'animate-pulse cursor-wait' : ''}`}
-            >
-              {isProcessing ? (
-                <>
-                  <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                  </svg>
-                  Process Image
-                </>
-              )}
-            </button>
-          </div>
-        )}
 
         {/* Footer with Buttons */}
-        <div className="mt-12 flex flex-col items-center gap-4">
-          <div className="flex flex-wrap justify-center gap-3">
+        <div className="mt-16 md:mt-24 border-t border-stone-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-wrap gap-4">
             <button
               onClick={() => window.open(import.meta.env.VITE_GOOGLE_SHEETS_URL, '_blank')}
-              className="px-4 py-2 backdrop-blur-xl bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-300 rounded-lg font-medium shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm"
+              className="px-4 py-2 border border-stone-300 hover:bg-stone-100 text-stone-700 font-mono text-[10px] tracking-wider uppercase transition-colors duration-200 cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
               View Sheets
             </button>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 backdrop-blur-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 rounded-lg font-medium shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm"
+              className="px-4 py-2 border border-stone-300 hover:bg-red-50 hover:border-red-200 hover:text-red-700 text-stone-700 font-mono text-[10px] tracking-wider uppercase transition-colors duration-200 cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
               Logout
             </button>
           </div>
-          <p className="text-purple-400/60 text-sm">✨ Powered by Gemini AI</p>
         </div>
       </div>
     </div>

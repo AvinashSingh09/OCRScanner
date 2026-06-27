@@ -25,8 +25,8 @@ export async function extractTextFromImage(imageDataUrl) {
   }
 
   try {
-    // List of models to try in order of preference
-    const modelsToTry = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-flash-latest'];
+    // Prefer the stable alias first so users do not wait on retired model retries.
+    const modelsToTry = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
 
     let lastError = null;
 

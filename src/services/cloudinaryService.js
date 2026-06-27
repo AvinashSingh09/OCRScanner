@@ -20,7 +20,7 @@ export async function uploadImageToCloudinary(dataUrl, fileName) {
         const formData = new FormData();
         formData.append('file', dataUrl);
         formData.append('upload_preset', uploadPreset);
-        formData.append('public_id', `business-cards/${fileName}`);
+        formData.append('public_id', `ocr-scans/${fileName}`);
 
         const response = await fetch(
             `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
