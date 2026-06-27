@@ -60,7 +60,7 @@ function App() {
                 Instructions
               </h2>
               <p className="text-sm text-stone-600 leading-relaxed font-serif">
-                Select or capture a clear, high-quality image. Gemini AI will analyze the picture and extract all text content automatically.
+                Select or capture a clear, high-quality image. The picture will be analyzed and all text content will be extracted automatically.
               </p>
             </div>
 
